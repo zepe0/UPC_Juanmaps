@@ -1,4 +1,7 @@
-.imgCard{
-max-width: 300px;
- object-fit: fill;
+ .imgCard > img {
+  max-width: 290px;
+  max-height: 300px;
+  object-fit: cover;
 }
+
+ 
