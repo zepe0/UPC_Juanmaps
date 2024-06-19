@@ -21,8 +21,8 @@ function home() {
         />
         <InputFile></InputFile>
 
-        {/* 
-        <Cardimg></Cardimg> */}
+        
+        <Cardimg></Cardimg> 
       </div>
     </>
   );

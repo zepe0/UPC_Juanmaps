@@ -6,30 +6,44 @@ import Map from "./Map";
 const InputFile = () => {
   const [position, setPosition] = useState([[41.223135, 1.536092]]);
   const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {}, [position]);
-  const handleFileChange = (event) => {
+
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      /*  (file).then((res =>{
-            console.log(res)
-        })) */
-      Exifr.parse(file)
+      try {
+        const output = await Exifr.parse(file);
+        console.log(output);
+        if (output.latitude && output.longitude) {
+          const newPosition = [
+            ...position,
+            [
+              parseFloat(output.latitude.toFixed(6)),
+              parseFloat(output.longitude.toFixed(6)),
+            ],
+          ];
+          setPosition(newPosition);
+          setErrorMessage("");
+        } else {
+        setErrorMessage("GPS No encontrado"); // No Contiene Cordenadas !!
+          
+        }
+      } catch (error) {
+        setErrorMessage("GPS No encontrado"); // Contiene Cordenadas pero Faltan Datos
+      }
 
-        .then((output) => {
-            console.log(output)
-          if (output.latitude) {
-            const newPosition = [
-              ...position,
-              [output.latitude.toFixed(6), output.longitude.toFixed(6)],
-            ];
-            setPosition(newPosition);
-          } else {
-            setErrorMessage("No GPS data found in the image");
-          }
-        })
-        .catch((error) => {
-          setErrorMessage("Error parsing image: " + error.message);
-        });
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        fetch("http://localhost/UPC_Juanmaps/src/api/uploadimg.php", {
+          method: "POST",
+          body: formData,
+        }).then((res) =>res.json()).then((img) => console.log(img));
+      } catch (error) {
+        setErrorMessage("Error uploading image: " + error.message);
+      }
     }
   };
 
@@ -37,7 +51,6 @@ const InputFile = () => {
     <div>
       <Input onChange={handleFileChange} type="file" placeholder="Add file" />
       {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-
       <Map data={position}></Map>
     </div>
   );

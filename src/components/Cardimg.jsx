@@ -16,21 +16,22 @@ function Cardimg() {
 
   return (
     <section className="listCards">
-      {Img.map((ele) => (
-        <Card className="Cardimg" key={ele.id}>
+      {Img.map((ele, index) => (
+        <Card className="Cardimg" key={index}>
           {ele ? (
             <Image
               src={ele.download_url}
-              alt="img"
-              className="imgCard"
-              as="div"
-            />
+              alt='img'
+              className='imgCard'
+             
+            >
+            </Image>
           ) : (
             ""
           )}
           {ele.author ? <p>{ele.author} </p> : ""}
 
-          <Rating defaultRating={3} maxRating={4} size="mini" clearable />
+     fo 
         </Card>
       ))}
     </section>
